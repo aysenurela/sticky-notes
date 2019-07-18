@@ -56,8 +56,15 @@ class StickyNotes extends Component {
     }
   }
 
+  onKeyDown (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      this.addTask()
+    }
+  }
+
   render () {
-    const { notes = [] } = this.state
+    const { notes = [], currentNote = {} } = this.state
 
     return (
       <div>
@@ -65,7 +72,8 @@ class StickyNotes extends Component {
           <input
             onChange={this.createTask.bind(this)}
             type='text'
-            className='new-todo'
+            value={currentNote.title || ''}
+            onKeyDown={this.onKeyDown.bind(this)}
           />
           <button type='submit' onClick={this.addTask.bind(this)}>
             +
