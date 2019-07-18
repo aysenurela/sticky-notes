@@ -1,50 +1,78 @@
 import React, { Component } from 'react'
 import './StickyNotes.scss'
-import _ from 'lodash'
 
 class StickyNotes extends Component {
   state = {
-    events: [
+    notes: [
       { title: 'event1', description: 'description1' },
       { title: 'event2', description: 'description2' }
-    ]
+    ],
+    currentNote: {}
   }
 
   onChangeDescription (event) {
-    const { events } = this.state
+    const { notes } = this.state
 
-    var _events = [...events]
+    let _notes = [...notes]
 
     let newDesc = event.target.value
 
     let eventIndex = event.target.id
 
-    _events[eventIndex].description = newDesc
+    _notes[eventIndex].description = newDesc
     this.setState({
-      events: _events
+      notes: notes
     })
   }
 
   onChangeTitle (event) {
-    const { events } = this.state
+    const { notes } = this.state
 
-    var _events = [...events]
+    let _notes = [...notes]
 
     let newTitle = event.target.value
 
     let eventIndex = event.target.id
 
-    _events[eventIndex].title = newTitle
+    _notes[eventIndex].title = newTitle
     this.setState({
-      events: _events
+      notes: _notes
     })
   }
 
+  createTask (event) {
+    this.setState({
+      currentNote: { title: event.target.value, description: '' }
+    })
+  }
+
+  addTask () {
+    const { notes = [], currentNote = {} } = this.state
+    let _notes = [...notes]
+
+    if (currentNote.title) {
+      _notes.push(currentNote)
+      this.setState({ notes: _notes, currentNote: {} })
+    }
+  }
+
   render () {
+    const { notes = [] } = this.state
+
     return (
       <div>
         <ul className='unordered'>
-          {this.state.events.map((row, index) => {
+          <input
+            onChange={this.createTask.bind(this)}
+            type='text'
+            className='new-todo'
+          />
+          <button type='submit' onClick={this.addTask.bind(this)}>
+            +
+          </button>
+          <br />
+          <br />
+          {notes.map((row, index) => {
             return (
               <li key={index} className='list'>
                 <div className='cover'>
